@@ -1,12 +1,14 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { SelectComponent } from './select.component';
+import userEvent from '@testing-library/user-event';
 import { Lookup } from 'common/models';
+import React from 'react';
+import { SelectComponent } from './select.component';
 
 describe('common/components/form/select/select.component specs', () => {
-  it('should render a select element when it feeds required props and three items', () => {
-    // Arrange
-    const props = {
+  let props;
+
+  beforeEach(() => {
+    props = {
       items: [
         {
           id: '1',
@@ -24,6 +26,10 @@ describe('common/components/form/select/select.component specs', () => {
       label: 'Test label',
       value: '',
     };
+  });
+
+  it('should render a select element when it feeds required props and three items', () => {
+    // Arrange
 
     // Act
     render(<SelectComponent {...props} />);
@@ -32,5 +38,23 @@ describe('common/components/form/select/select.component specs', () => {
 
     // Assert
     expect(selectElement).toBeInTheDocument();
+  });
+
+  it('should render a menu with three item when it clicks on select element', () => {
+    // Arrange
+
+    // Act
+    render(<SelectComponent {...props} />);
+
+    const selectElement = screen.getByRole('button', {name: 'Test label'});
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+    userEvent.click(selectElement);
+    const menuElement = screen.getByRole('listbox');
+    const itemElementList = screen.getAllByRole('option');
+
+    // Assert
+    expect(menuElement).toBeInTheDocument();
+    expect(itemElementList).toHaveLength(props.items.length);
   });
 });
