@@ -1,10 +1,12 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { act } from "react-dom/test-utils";
 import { useSearchBar } from "./search-bar.hook";
 
 describe("common/components/search-bar/search-bar.hook specs", () => {
-  it('should return search text, onSearch method and filteredList when it feeds colors array and "name" field', () => {
-    // Arrange
-    const colors = [
+  let colors = [];
+  
+  beforeEach(() => {
+    colors = [
       { 
         id: 1,
         name: 'red'
@@ -18,6 +20,10 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
         name: 'green'
       },
     ];
+  });
+
+  it('should return search text, onSearch method and filteredList when it feeds colors array and "name" field', () => {
+    // Arrange
 
     // Act
     const { result } = renderHook(() => useSearchBar(colors, ['name']));
@@ -26,5 +32,20 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
     expect(result.current.search).toEqual('');
     expect(result.current.onSearch).toEqual(expect.any(Function));
     expect(result.current.filteredList).toEqual(colors);
+  });
+
+  it('should return filteredList with one element equals red when it calls onSearch method with "red" text', async () => {
+    // Arrange
+
+    // Act
+    const { result, waitForNextUpdate } = renderHook(() => useSearchBar(colors, ['name']));
+
+    act(() => result.current.onSearch('red'));
+
+    await waitForNextUpdate();
+
+    // Assert
+    expect(result.current.search).toEqual('red');
+    expect(result.current.filteredList).toEqual([colors[0]]);
   });
 });
