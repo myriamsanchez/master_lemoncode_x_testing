@@ -57,4 +57,27 @@ describe('common/components/form/select/select.component specs', () => {
     expect(menuElement).toBeInTheDocument();
     expect(itemElementList).toHaveLength(props.items.length);
   });
+
+  it('should calls onChange method with value equals 2 when it clicks on second item', () => {
+    // Arrange
+    props = {
+      ...props,
+      onChange: jest.fn(),
+    }
+
+    // Act
+    render(<SelectComponent {...props} />);
+
+    const selectElement = screen.getByRole('button', { name: 'Test label' });
+    
+    userEvent.click(selectElement);
+    const itemElementList = screen.getAllByRole('option');
+    userEvent.click(itemElementList[1]);
+
+    // Assert
+    expect(props.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ target: {value: '2' }}),
+      expect.anything()
+    );
+  });
 });
