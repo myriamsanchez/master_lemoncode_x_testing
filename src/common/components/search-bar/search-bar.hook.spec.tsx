@@ -59,4 +59,19 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
     // Assert
     expect(debounceSearchStub).toHaveBeenCalledWith('', 250);
   });
+
+  it('should return filteredList with one element equals blue when useDebounce return text equals "blue"', () => {
+    // Arrange
+    const debounceSearchStub = jest
+      .spyOn(commonHooks, 'useDebounce')
+      .mockReturnValue('blue');
+
+    // Act
+    const { result } = renderHook(() => useSearchBar(colors, ['name']));
+
+    // Assert
+    expect(debounceSearchStub).toHaveBeenCalledWith('', 250);
+    expect(result.current.search).toEqual('');
+    expect(result.current.filteredList).toEqual([colors[1]]);
+  });
 });
