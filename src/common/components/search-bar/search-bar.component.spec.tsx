@@ -16,10 +16,13 @@ describe("common/search-bar/search-bar.component specs", () => {
     // Act
     render(<SearchBarComponent {...props} />);
 
-    const inputElement = screen.getByRole('textbox') as HTMLInputElement;
+    // const inputElement = screen.getByRole('textbox') as HTMLInputElement;
+    const inputElement = screen.getByPlaceholderText('test placeholder') as HTMLInputElement;
+    const iconElement = screen.getByLabelText('Search icon');
 
     // Assert
     expect(inputElement).toBeInTheDocument();
     expect(inputElement.value).toEqual('test search');
+    expect(iconElement).toBeInTheDocument();
   });
 });
