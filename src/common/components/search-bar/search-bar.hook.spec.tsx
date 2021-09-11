@@ -1,5 +1,5 @@
-import { renderHook } from "@testing-library/react-hooks";
-import { act } from "react-dom/test-utils";
+import { renderHook, act } from "@testing-library/react-hooks";
+import * as commonHooks from 'common/hooks/debounce.hook';
 import { useSearchBar } from "./search-bar.hook";
 
 describe("common/components/search-bar/search-bar.hook specs", () => {
@@ -47,5 +47,16 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
     // Assert
     expect(result.current.search).toEqual('red');
     expect(result.current.filteredList).toEqual([colors[0]]);
+  });
+
+  it('should call useDebounce hook when it renders', () => {
+    // Arrange
+    const debounceSearchStub = jest.spyOn(commonHooks, 'useDebounce');
+
+    // Act
+    renderHook(() => useSearchBar(colors, ['name']));
+
+    // Assert
+    expect(debounceSearchStub).toHaveBeenCalledWith('', 250);
   });
 });
