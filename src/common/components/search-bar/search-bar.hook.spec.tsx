@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 import * as commonHooks from 'common/hooks/debounce.hook';
+import * as filterHelpers from 'common/helpers/filter.helpers';
 import { useSearchBar } from "./search-bar.hook";
 
 describe("common/components/search-bar/search-bar.hook specs", () => {
@@ -73,5 +74,16 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
     expect(debounceSearchStub).toHaveBeenCalledWith('', 250);
     expect(result.current.search).toEqual('');
     expect(result.current.filteredList).toEqual([colors[1]]);
+  });
+
+  it('should call filterByText method when it renders', () => {
+    // Arrange
+    const filterByTextStub = jest.spyOn(filterHelpers, 'filterByText');
+
+    // Act
+    renderHook(() => useSearchBar(colors, ['name']));
+
+    // Assert
+    expect(filterByTextStub).toHaveBeenCalledWith(colors, '', ['name']);
   });
 });
