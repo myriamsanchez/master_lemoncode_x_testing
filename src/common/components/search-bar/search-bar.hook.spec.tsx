@@ -86,4 +86,25 @@ describe("common/components/search-bar/search-bar.hook specs", () => {
     // Assert
     expect(filterByTextStub).toHaveBeenCalledWith(colors, '', ['name']);
   });
+
+  it('should return filteredList with two elements equals blue and green when filterByText return array with two elements blue and green', () => {
+    // Arrange
+    const filterByTextStub = jest
+      .spyOn(filterHelpers, 'filterByText')
+      .mockReturnValue([
+        { id: 2, name: 'blue' },
+        { id: 3, name: 'green' },
+      ]);
+
+    // Act
+    const { result } = renderHook(() => useSearchBar(colors, ['name']));
+
+    // Assert
+    expect(filterByTextStub).toHaveBeenCalledWith(colors, '', ['name']);
+    expect(result.current.search).toEqual('');
+    expect(result.current.filteredList).toEqual([
+      { id: 2, name: 'blue' },
+      { id: 3, name: 'green' },
+    ]);
+  });
 });
